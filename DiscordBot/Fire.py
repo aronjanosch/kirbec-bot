@@ -183,7 +183,7 @@ class Fire:
             print('Error in fetchDiscordPoints')
             return {}
 
-    def postNewDiscordPoints(self, guild, user, newPoints):
+    def postNewDiscordPoints(self, guild, userid, newPoints):
         """
         Updates the discord points for a user
 
@@ -203,10 +203,11 @@ class Fire:
             if d == None:
                 return {}
 
-            d[user] = newPoints
+            d[userid] = newPoints
 
             doc_ref.set(d)
-        except:
+        except Exception as e:
+            print(e)
             print('Error in postNewDiscordPoints')
             return {}
 

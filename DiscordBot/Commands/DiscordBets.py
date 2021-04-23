@@ -51,6 +51,8 @@ class DiscordBets:
 
         if len(messageAndOptions) != 2:
             return getUsageEmbed("-createbet [[Bet Description]] [[Option 1], [Option 2], ...]\n\nexample: -createbet [I will win this game] [yes, no]")
+        if not user.guild_permissions.administrator:
+            return getOopsEmbed("Command can only be used by Server-Admins")
 
         try:
             betTitle = messageAndOptions[0]

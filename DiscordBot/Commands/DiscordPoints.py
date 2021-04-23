@@ -1,7 +1,8 @@
 from datetime import datetime
 import discord
 import itertools
-from .utils import formatString, getUsageEmbed
+from .utils import formatString, getUsageEmbed, getOopsEmbed
+
 
 # IDEAS
 # 1. Paying out points (without bets)
@@ -53,8 +54,6 @@ class DiscordPoints:
 
         return self.__createPointsEmbed(title, description, userString, pointsString)
 
-    
-
     def createNewReward(self, guild, rewardString):
         """
         Create new reward for the guild
@@ -75,10 +74,11 @@ class DiscordPoints:
         rewardStringList = ["".join(x) for _, x in itertools.groupby(rewardString, key=str.isdigit)]
 
         if len(rewardStringList) < 2:
-            return getUsageEmbed("-addreward [Desired Reward] [Price of the Reward]\n\nexample: -addreward CSGO with friends 500")
+            return getUsageEmbed(
+                "-addreward [Desired Reward] [Price of the Reward]\n\nexample: -addreward CSGO with friends 500")
 
         try:
-            rewardCost = int(rewardStringList[len(rewardStringList)-1])
+            rewardCost = int(rewardStringList[len(rewardStringList) - 1])
             rewardTitle = self.__parseRewardStringList(rewardStringList)
 
             self.fire.postNewReward(guild, rewardTitle, rewardCost)
@@ -86,7 +86,8 @@ class DiscordPoints:
             return self.getRewardsEmbed(guild)
         except Exception as e:
             print("ERROR ", e)
-            return getUsageEmbed("-addreward [Desired Reward] [Price of the Reward]\n\nexample: -addreward CSGO with friends 500")
+            return getUsageEmbed(
+                "-addreward [Desired Reward] [Price of the Reward]\n\nexample: -addreward CSGO with friends 500")
 
     def getRewardsEmbed(self, guild):
         """
@@ -146,7 +147,7 @@ class DiscordPoints:
             reward_title = rewards_list[int(reward_id) - 1][0]
             reward_cost = rewards_list[int(reward_id) - 1][1]
 
-            #Check to see if the user has enough points to redeem the reward
+            # Check to see if the user has enough points to redeem the reward
             if points_dict[str(user.id)] and points_dict[str(user.id)] < reward_cost:
                 return self.__createNotEnoughPointsEmbed(user, points_dict[str(user.id)])
             else:
@@ -160,12 +161,45 @@ class DiscordPoints:
             return getUsageEmbed("-redeemReward [Desired Reward Id]\n\nexample: -redeemReward 3")
 
     def addPoints(self, guild, author, user, points):
+        """
+        add Points to a specific User
+        [@Todo: Ping Users associated with the points]
+
+        Parameters
+        ----------
+        guild     : discord.Guild
+            The server that we want to get information from
+        author    : message.user
+        user      : discord.Member if in guild, discord.User otherwise
+            The user that redeemed the reward
+        points : Int
+            The amount of points
+
+        Returns
+        ----------
+        discord.Embed
+            Embedded message with the redeemed reward
+                """
         points_dict = self.fire.fetchDiscordPoints(guild)
+        print(user.id)
+        try:
+            if not str(user.id) in points_dict:
+                return getOopsEmbed("User ID not correct")
+            elif not author.guild_permissions.administrator:
+                return getOopsEmbed("Command can only be used by Server-Admins")
 
-        points_dict[str(user)]
+            print(points_dict[str(user.id)])
 
-        #self.fire.postNewDiscordPoints(guild, user, points)
-        return self.__createPointsEmbed("Points added", "description", "userString", "pointsString")
+            new_points = points_dict[str(user.id)] + int(points)
+            print(new_points)
+            self.fire.postNewDiscordPoints(guild, str(user.id), new_points)
+
+            return self.__createPointsEmbed("Points added", "Points were added to balance", f"{user}", f"{new_points}")
+
+        except Exception as e:
+            print(e)
+            print("Error adding points")
+            return getOopsEmbed("Error adding points, check console")
 
     # ---------- MARK: - Private Functions ----------
     async def __createdEmbedStrings(self, guild, sortedList, page):
@@ -199,8 +233,8 @@ class DiscordPoints:
         if page > pages or page < 0:
             page = 1
 
-        for i in range(0,20):
-            shiftedIndex = (page-1)*20 + i
+        for i in range(0, 20):
+            shiftedIndex = (page - 1) * 20 + i
             if shiftedIndex < len(sortedList):
                 user_id = sortedList[shiftedIndex][0]
                 points = sortedList[shiftedIndex][1]
@@ -245,7 +279,6 @@ class DiscordPoints:
 
         return embed
 
-
     def __noRewardsEmbed(self, guild):
         """
         Private function that shows that there are no rewards yet for the guild
@@ -265,7 +298,8 @@ class DiscordPoints:
         embed = discord.Embed(title="Oops!", description="", timestamp=now)
 
         embed.set_footer(text="Kirbec Bot", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
-        embed.add_field(name="No Rewards Set Yet!", value="To add a reward:\n-addreward [Desired Reward] [Price of the Reward]")
+        embed.add_field(name="No Rewards Set Yet!",
+                        value="To add a reward:\n-addreward [Desired Reward] [Price of the Reward]")
 
         return embed
 
@@ -295,7 +329,7 @@ class DiscordPoints:
         for i in range(len(rewardsList)):
             numLines, formattedRewardString = formatString(str(rewardsList[i][0]))
 
-            idString += str(i+1) + ("\n" * numLines)
+            idString += str(i + 1) + ("\n" * numLines)
             rewardString += formattedRewardString + "\n"
             costString += str(rewardsList[i][1]) + ("\n" * numLines)
 
@@ -431,7 +465,7 @@ class DiscordPoints:
             The reward title string
         """
         s = ""
-        for i in range(len(rewardStringList)-1):
+        for i in range(len(rewardStringList) - 1):
             s += rewardStringList[i]
 
         return s

@@ -107,3 +107,14 @@ class MiscCommands:
         content = [x.strip() for x in content]
 
         return content[randint(0,99)]
+
+    def checkAdmin(self, author, user):
+        """
+
+        """
+        print(author.guild_permissions.administrator)
+        print(user)
+        if user.guild_permissions.administrator:
+            return f"{user} is an admin"
+        else:
+            return f"{user} is a fucking peasant"

@@ -231,7 +231,25 @@ class DiscordClient(discord.Client):
                 msg = message.content
                 commandAndBet = msg.split(" ")
                 if len(commandAndBet) == 3:
-                    await message.channel.send(embed= self.discordPoints.addPoints(message.guild, message.author, commandAndBet[1], commandAndBet[2]))
+                    userid = commandAndBet[1]
+                    userid = userid[3:]
+                    userid = userid[:-1]
+                    print(userid)
+                    user = discord.Guild.get_member(message.guild, int(userid))
+                    await message.channel.send(embed=self.discordPoints.addPoints(message.guild, message.author, user, commandAndBet[2]))
                 else:
                     await message.channel.send(embed=getUsageEmbed("-addpoints [UserID] [Amount]\n\nexample: -addpoints 1123123123123123123 200"))
 
+            elif message.content.startswith('-checkadmin'):
+                msg = message.content
+                commandAndBet = msg.split(" ")
+                if len(commandAndBet) == 2:
+                    userid = commandAndBet[1]
+                    userid = userid[3:]
+                    userid = userid[:-1]
+                    print(userid)
+                    user = discord.Guild.get_member(message.guild, int(userid))
+                    print(user)
+                    await message.channel.send(self.miscCommands.checkAdmin(message.author, user))
+                else:
+                    await message.channel.send(embed=getUsageEmbed("-checkadmin [@User]"))
