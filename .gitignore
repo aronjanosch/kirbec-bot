@@ -2,6 +2,7 @@
 /DiscordBot/__pycache__
 .DS_Store
 .env
+.idea/*
 /DiscordBot/Commands/__pycache__/*
 /kirbec-bot-archive/*
 ./firebase_config.json/
