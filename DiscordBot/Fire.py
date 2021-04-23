@@ -358,7 +358,7 @@ class Fire:
 
             if not betId in betDict:
                 return None, "Not a valid Bet Id"
-            if betDict[betId]['startedBy'] != userId and not user.guild_permissions.administrator:
+            if betDict[betId]['startedBy'] != userId and not userId.guild_permissions.administrator:
                 return None, "Only the person that started the bet or an admin can close submissions for the bet"
 
             betDict[betId]["closed"] = True
@@ -437,7 +437,8 @@ class Fire:
                 if userBet["betOption"] == betDict[betId]["winningOption"]:
                     pointAmount = int(int(userBet["amount"]) * totalPointMultipliers[userBet["betOption"]])
                     userRewards[memberDict[int(key)]] = pointAmount
-                    pointsDict[userId] = int(pointsDict[userId]) + pointAmount
+                    print(pointsDict)
+                    pointsDict[str(key)] = int(pointsDict[str(key)]) + pointAmount
 
             bet_doc_ref.set(betDict)
             points_doc_ref.set(pointsDict)
@@ -618,8 +619,8 @@ class Fire:
 
         for member in members:
             if str(member.id) in d:
-                d[str(member.id)] += 1
+                d[str(member.id)] += 0
             else:
-                d[str(member.id)] = 1
+                d[str(member.id)] = 100
 
         doc_ref.set(d)

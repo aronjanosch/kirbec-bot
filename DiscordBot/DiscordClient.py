@@ -227,4 +227,11 @@ class DiscordClient(discord.Client):
                     await message.channel.send(embed=await self.discordBets.showBet(message.guild, commandAndBet[1]))
                 else: 
                     await message.channel.send(embed=getUsageEmbed("-showbet [bet id]\n\n example: -showbet 7"))
+            elif message.content.startswith('-addpoints'):
+                msg = message.content
+                commandAndBet = msg.split(" ")
+                if len(commandAndBet) == 3:
+                    await message.channel.send(embed= self.discordPoints.addPoints(message.guild, message.author, commandAndBet[1], commandAndBet[2]))
+                else:
+                    await message.channel.send(embed=getUsageEmbed("-addpoints [UserID] [Amount]\n\nexample: -addpoints 1123123123123123123 200"))
 

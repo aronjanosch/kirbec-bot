@@ -6,4 +6,6 @@
 /kirbec-bot-archive/*
 ./firebase_config.json/
 ./firebase_config_live.json/
-
+.python-version
+kirbec-bot-firebase-adminsdk-6ki6v-4855d99e0a.json
+.vscode/*
