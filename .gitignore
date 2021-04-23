@@ -9,3 +9,6 @@
 .python-version
 kirbec-bot-firebase-adminsdk-6ki6v-4855d99e0a.json
 .vscode/*
+untracked_lines.txt
+/DiscordBot/main.py
+/DiscordBot/firebase_config.py
