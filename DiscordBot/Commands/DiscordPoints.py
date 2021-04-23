@@ -53,6 +53,8 @@ class DiscordPoints:
 
         return self.__createPointsEmbed(title, description, userString, pointsString)
 
+    
+
     def createNewReward(self, guild, rewardString):
         """
         Create new reward for the guild
@@ -157,7 +159,13 @@ class DiscordPoints:
             print(e)
             return getUsageEmbed("-redeemReward [Desired Reward Id]\n\nexample: -redeemReward 3")
 
+    def addPoints(self, guild, author, user, points):
+        points_dict = self.fire.fetchDiscordPoints(guild)
 
+        points_dict[str(user)]
+
+        #self.fire.postNewDiscordPoints(guild, user, points)
+        return self.__createPointsEmbed("Points added", "description", "userString", "pointsString")
 
     # ---------- MARK: - Private Functions ----------
     async def __createdEmbedStrings(self, guild, sortedList, page):
