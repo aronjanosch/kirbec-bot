@@ -1,8 +1,5 @@
 /DiscordBot/LeagueOfLegendsInfo.py
 /DiscordBot/__pycache__
-/DiscordBot/main.py
-/DiscordBot/firebase_config.py
-DiscordBot/firebase_config.py
 .DS_Store
 .env
 .idea/*
